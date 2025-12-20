@@ -1,0 +1,8 @@
+README
+setup.py
+/home/carloni/class_public-master2/python/../python/classy.cpp
+/home/carloni/class_public-master3/python/../python/classy.cpp
+classy.egg-info/PKG-INFO
+classy.egg-info/SOURCES.txt
+classy.egg-info/dependency_links.txt
+classy.egg-info/top_level.txt
