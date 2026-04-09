@@ -705,7 +705,7 @@ int background_w_fld(
     *w_fld = pba->w0_fld + pba->wa_fld * (1. - a);
     break;
   case AS0:
-    *w_fld = -1. + pba->B_fld/(1.+3.*pba->B_fld*log(a));
+    *w_fld = -1. - pba->B_fld/(1.+3.*pba->B_fld*log(a));
     break;
   case OS1:
     *w_fld = pba->w0_fld + pba->wa_fld * (1. - a);
@@ -715,9 +715,6 @@ int background_w_fld(
     break;
   case QQ:
     *w_fld =  -1 + (((1+pba->w0_fld))/(pow(a, -3)))*pow(atanh(pow((pow(a,-3)*(-1+1/(pba->Omega0_fld)))/(1+(-1+1/(pba->Omega0_fld))*pow(a,-3)), 0.5))-atanh(pow(2, -0.5)), 2)*pow( atanh(pow(1-pba->Omega0_fld,0.5))-atanh(pow(2, -0.5)),-2);
-    break;
-  case qsLCDM:
-    *w_fld = (-pba->index_bg_rho_fld + pba->w_qs * pba->Omega_qs * pba->index_bg_rho_crit * pow(a,-3.0 * (1.0+pba->w_qs)))/(pba->index_bg_rho_fld + pba->Omega_qs * pba->index_bg_rho_crit * pow(a,-3.0 * (1.0 + pba->w_qs)));
     break;
   case PADE:
     *w_fld = (pba->w0_fld)/(1.+ pba->wb_fld* (1./a - 1.));
@@ -729,8 +726,13 @@ int background_w_fld(
     *w_fld = (pba->w0_fld + pba->wa_fld * (1./a - 1.))/(1. + pba->wb_fld * (1./a - 1.) +  pba->wc_fld * pow(1./a - 1., 2.));
     break;
   case PADE0:
-       *w_fld = (1./3.) * ((2.0 * pba->w0_fld)/(1. + (1./a - 1.) * (1. + pba->w0_fld)) - 1.);
+    /*w_fld = (1./3.) * ((2.0 * pba->w0_fld)/(1. + (1./a - 1.) * (1. + pba->w0_fld)) - 1.);
+    break;*/
+    *w_fld = (1./3.) * ((2.0 * pba->w0_fld)*((1. + (1./a - 1.) * (1. + pba->w0_fld))/(pow(1. + (1./a - 1.) * (1. + pba->w0_fld), 2.0) + 1.e-6)) - 1.);
     break;
+  /*case PADE0:
+    *w_fld = (1./3.) * ((2.0 * pba->w0_fld)/(1. - (1./a - 1.) * (1. + pba->w0_fld)) - 1.);
+        ;*/
   case EDE:
     // Omega_ede(a) taken from eq. (10) in 1706.00730
     Omega_ede = (pba->Omega0_fld - pba->Omega_EDE*(1.-pow(a,-3.*pba->w0_fld)))
@@ -767,7 +769,7 @@ int background_w_fld(
     *dw_over_da_fld = - pba->wa_fld;
     break;
   case AS0:
-    *dw_over_da_fld = - 3.*pow(pba->B_fld,2.)/(a*(1.+3.*pba->B_fld*log(a)));
+    *dw_over_da_fld = 3.*pow(pba->B_fld,2.)/(a*(1.+6.*pba->B_fld*log(a)+9.*pow(pba->B_fld*log(a),2.0)));
     break;
   case OS1:
     *dw_over_da_fld =- pba->wa_fld;
@@ -777,9 +779,6 @@ int background_w_fld(
     break;
   case QQ:
     *dw_over_da_fld = ((1.+pba->w0_fld)*(atanh(pow((-1.+1./pba->Omega0_fld)/(pow(a, 3)*(1.+(-1.+1./pba->Omega0_fld)/(pow(a, 3)))),0.5))-atanh(1./pow(2., 0.5)))*((3*pow(-1.+1./pba->Omega0_fld,2.))/(pow(a, 7)*pow(1.+(-1.+1./pba->Omega0_fld)/(pow(a, 3)),2))-(3*(-1.+1./pba->Omega0_fld))/(pow(a, 4)*(1.+(-1.+1./pba->Omega0_fld)/(pow(a, 3)))))*pow(a, 3))/(pow(atanh(pow(1.-pba->Omega0_fld,0.5))-atanh(1./pow(2,0.5)),2.)*pow((-1.+1./pba->Omega0_fld)/(pow(a, 3)*(1.+(-1.+1./pba->Omega0_fld)/(pow(a, 3)))),0.5)*(1.-(-1.+1./pba->Omega0_fld)/(pow(a, 3)*(1.+(-1.+1./pba->Omega0_fld)/(pow(a, 3))))))+(3*(1.+pba->w0_fld)*pow(atanh(pow((-1.+1./pba->Omega0_fld)/(pow(a, 3)*(1.+(-1.+1./pba->Omega0_fld)/(pow(a, 3.)))) ,0.5))-atanh(1./pow(2., 0.5)) ,2.)*pow(a, 2.))/(pow(atanh(pow(1.-pba->Omega0_fld,0.5))-atanh(1./pow(2.,0.5)), 2.));
-    break;
-  case qsLCDM:
-    *dw_over_da_fld = -(3.0 * pba->index_bg_rho_fld * pow(1.0 + pba->w_qs, 2.0) * pba->Omega_qs * pba->index_bg_rho_crit * pow(a, 2.0 + 3.0 * pba->w_qs))/(pow(pba->Omega_qs * pba->index_bg_rho_crit + pba->index_bg_rho_fld * pow(a, 3.0 * (1.0 + pba->w_qs)), 2.0));
     break;
   case PADE:
     *dw_over_da_fld = (pba->w0_fld * pba->wb_fld)/(pow(pba->wb_fld + a - pba->wb_fld * a, 2.0));
@@ -791,8 +790,11 @@ int background_w_fld(
     *dw_over_da_fld = (pba->w0_fld * a * (-2.0 * pba->wc_fld * (-1.0 + a) + pba->wb_fld * a) + pba->wa_fld *(pba->wc_fld * pow(-1. + a, 2.) - pow(a, 2.)))/pow(pba->wc_fld * pow(-1. + a, 2.) + a * (pba->wb_fld + a - pba->wb_fld * a), 2.0);
     break;
   case PADE0:
-    *dw_over_da_fld = (2.0 * pba->w0_fld * (1.0 + pba->w0_fld))/(3.0 * (pow(pba->w0_fld * a, 2.0) - 2.0 * pba->w0_fld * (1.0 + pba->w0_fld) * a + pow(pba->w0_fld, 2.0) + 2.0 * pba->w0_fld + 1.0));
+     *dw_over_da_fld = (2.0 * pba->w0_fld * (1.0 + pba->w0_fld))/(3.0 * (pow(pba->w0_fld * a, 2.0) - 2.0 * pba->w0_fld * (1.0 + pba->w0_fld) * a + pow(pba->w0_fld, 2.0) + 2.0 * pba->w0_fld + 1.0));
     break;
+  /*case PADE0: 
+     *dw_over_da_fld =  -(2*pow(pba->w0_fld,2)+2*pba->w0_fld)/(3*((pow(pba->w0_fld,2)+4*pba->w0_fld+4)*pow(a,2)+(-2*pow(pba->w0_fld)-6*pba->w0_fld-4)*a+pow(pba->w0_fld,2)+2*pba->w0_fld+1));
+        ;*/
   case EDE:
     d2Omega_ede_over_da2 = 0.;
     *dw_over_da_fld = - d2Omega_ede_over_da2*a/3./(1.-Omega_ede)/Omega_ede
@@ -817,7 +819,7 @@ int background_w_fld(
     *integral_fld = 3.*((1.+pba->w0_fld+pba->wa_fld)*log(1./a) + pba->wa_fld*(a-1.));
     break;
   case AS0:
-    *integral_fld = -log(1.+3.*pba->B_fld*log(a));
+    *integral_fld = log(1.+3.*pba->B_fld*log(a));
     break;
   case OS1:
     *integral_fld = 0.0;
@@ -827,9 +829,6 @@ int background_w_fld(
     break;
   case QQ:
     *integral_fld = 0.0;
-    break;
-  case qsLCDM:
-    *integral_fld =-3.0 * log(a) - (pba->w_qs * log(pow(a, 3.0 * (1.0 + pba->w_qs))))/(1+pba->w_qs) - log(( pba->index_bg_rho_fld + pba->Omega_qs * pba->index_bg_rho_crit)/(pow(a, 3.0 * (1.0 + pba->w_qs)) * pba->index_bg_rho_fld + pba->Omega_qs * pba->index_bg_rho_crit));
     break;
   case PADE:
     *integral_fld = (3.0 * pba->w0_fld * log((1.0 - a) * pba->wb_fld + a) + (3.0 - 3.0 * pba->wb_fld) * log(a))/(pba->wb_fld - 1.0);
@@ -843,6 +842,9 @@ int background_w_fld(
   case PADE0:
     *integral_fld = 2. * log(fabs((a-1)*pba->w0_fld-1.))-2*log(a);
     break;
+ /*case PADE0:
+    *integral_fld = -(2*pba->w0_fld*log(fabs((a-1)*pba->w0_fld+2*a-1)))/(pba->w0_fld+2)-2*log(a);
+         ;*/
   case EDE:
     class_stop(pba->error_message,"EDE implementation not finished: to finish it, read the comments in background.c just before this line\n");
     break;
@@ -2107,8 +2109,8 @@ int background_solve(
                              background_sources,
                              NULL, //'print_variables' in evolver_rk could be set, but, not required
                              pba->error_message),
-             pba->error_message,
-             pba->error_message);
+              pba->error_message,
+              pba->error_message);
 
   /** - recover some quantities today */
   /* -> age in Gyears */
@@ -3103,7 +3105,7 @@ int background_output_budget(
 
   return _SUCCESS_;
 }
-
+// Here we consider the modified comoving sound horizon at lss and the modified sound horizon at the drag epoch. The initial and final values can be modified as you want.
 int background_rs_modified(struct background *pba) {
   double logz_start = log(1e6);
   double logz_end = log(1089.1);

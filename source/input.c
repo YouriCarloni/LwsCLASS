@@ -2696,7 +2696,15 @@ int input_read_parameters_species(struct file_content * pfc,
   class_read_double("Omega_new",pba->Omega0_new);
   class_read_double("w_new",pba->w_new);
   Omega_tot += pba->Omega0_new;
+  
+  class_read_double("wb_fld",pba->wb_fld);
+  /*pba->wb_fld = pow(10.0, pba->wb_fld);*/
 
+ /* class_read_double("Omega_new",pba->Omega0_new);
+  pba->Omega0_new = pow(10.0, pba->Omega0_new);
+  class_read_double("w_new",pba->w_new);
+  Omega_tot += pba->Omega0_new;
+*/
 
   /* 7) ** ADDITIONAL SPECIES ** --> Add your species here */
 
@@ -3281,9 +3289,6 @@ int input_read_parameters_species(struct file_content * pfc,
       else if ((strstr(string1,"QQ") != NULL) || (strstr(string1,"qq") != NULL)) {
         pba->fluid_equation_of_state = QQ;
         }
-      else if ((strstr(string1,"qsLCDM") != NULL) || (strstr(string1,"qsLCDM") != NULL)) {
-        pba->fluid_equation_of_state = qsLCDM;
-      }
       else if ((strstr(string1,"PADE") != NULL) || (strstr(string1,"pade") != NULL)) {
         pba->fluid_equation_of_state = PADE;
       }
@@ -3342,19 +3347,12 @@ int input_read_parameters_species(struct file_content * pfc,
       class_read_double("w0_fld",pba->w0_fld);
       class_read_double("cs2_fld",pba->cs2_fld);
     }
-    if (pba->fluid_equation_of_state == qsLCDM) {
-      /** 8.a.2.3) Equation of state of the fluid in 'EDE' case */
-      /* Read */
-      class_read_double("Omega_qs", pba->Omega_qs);
-      class_read_double("w_qs", pba->w_qs);
-      class_read_double("cs2_fld", pba->cs2_fld);
-    }
     if (pba->fluid_equation_of_state == PADE) {
       /** 8.a.2.3) Equation of state of the fluid in 'EDE' case */
       /* Read */
       class_read_double("w0_fld",pba->w0_fld);
       class_read_double("wb_fld",pba->wb_fld);
-      class_read_double("cs2_fld", pba->cs2_fld);
+    
     }
     if (pba->fluid_equation_of_state == PADE1) {
       /** 8.a.2.3) Equation of state of the fluid in 'EDE' case */
@@ -5914,8 +5912,6 @@ int input_default_params(struct background *pba,
 
   /* ** ADDITIONAL SPECIES ** */
   /** 9.a.2.2) 'stiff' case */
-  pba->Omega_qs =1e-6;
-  pba->w_qs = 0.1;
   /** 9.a.2.2) 'new' case*/ 
   pba->Omega0_new =0.;
   pba->w_new = 0.;
@@ -5930,7 +5926,7 @@ int input_default_params(struct background *pba,
   pba->use_ppf = _TRUE_;
   pba->c_gamma_over_c_fld = 0.4;
   /** 9.a.2) Equation of state */
-  pba->fluid_equation_of_state = AS0;
+  pba->fluid_equation_of_state = CLP;
   pba->w0_fld = -0.9;
   pba->cs2_fld = 1.;
   /** 9.a.2.1) 'CLP' case */

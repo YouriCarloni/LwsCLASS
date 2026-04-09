@@ -12,7 +12,7 @@
 
 /** list of possible parametrisations of the DE equation of state */
 
-enum equation_of_state {CLP,EDE,AS0,OS1,OS2,QQ,qsLCDM,PADE,PADE1,PADE2,PADE0};
+enum equation_of_state {CLP,EDE,AS0,OS1,OS2,QQ,PADE,PADE1,PADE2,PADE0};
 
 
 /** list of possible parametrizations of the varying fundamental constants */
@@ -119,8 +119,6 @@ struct background
   double sigex;
   double rs_mod; /**< Modified sound horizon */
   double rd_mod; /**< Modified sound horizon */
-  double Omega_qs;
-  double w_qs;
   double Omega0_new;
   double w_new;
   double wb_fld;

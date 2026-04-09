@@ -2619,10 +2619,6 @@ cdef class Class:
             elif name == 'B_fld':
                 #value = pow(log((self.ba.rho_star)/(self.ba.index_bg_rho_crit*self.ba.Omega0_m))-1.,-1.)
                  value = pow(290.135 - log(self.ba.Omega0_m) -2*log(self.ba.h*100), -1)
-            elif name == 'Omega_qs':
-                value = self.ba.Omega_qs
-            elif name == 'w_qs':
-                value = self.ba.w_qs
             elif name == 'Omega_new':
                 value = self.ba.Omega0_new
             elif name == 'w_new':

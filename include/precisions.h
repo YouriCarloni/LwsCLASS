@@ -6,7 +6,7 @@
 
 /**
  * Default initial value of scale factor used in the integration of background quantities.
- * For models like ncdm, the code may decide to start the integration earlier (1e-14 initially) for the qsLCDM I put 1e-40.
+ * For models like ncdm, the code may decide to start the integration earlier (1e-14 initially) for the LwsCDM I put 1e-40.
  */
 class_precision_parameter(a_ini_over_a_today_default,double, 1.e-40)
 /**
@@ -19,7 +19,7 @@ class_precision_parameter(background_Nloga,int,40000)
 class_type_parameter(background_evolver,int,enum evolver_type,ndf15)
 /**
  * Tolerance of the background integration, giving the allowed relative integration error.
- * (used by both evolvers)
+ * (used by both evolvers 1e-10)*
  */
 class_precision_parameter(tol_background_integration,double,1.e-10)
 /**
@@ -34,7 +34,7 @@ class_precision_parameter(background_integration_stepsize,double,0.5)
  * such that the Omega of radiation at that point is close to 1 within tolerance.
  * (Class starts background integration during complete radiation domination (1e-4))
  */
-class_precision_parameter(tol_initial_Omega_r,double,1.e-4)
+class_precision_parameter(tol_initial_Omega_r,double,1.e-1)
 /**
  * Tolerance of relative deviation of the used non-cold dark matter mass compared to that which would give the correct density.
  * The dark matter mass is estimated from the dark matter density using a Newton-Method.
@@ -336,7 +336,7 @@ class_precision_parameter(perturbations_sampling_stepsize,double,0.1)
 class_precision_parameter(perturbations_sampling_boost_above_age_fraction, double, 0.9)
 /**
  * control parameter for the precision of the perturbation integration,
- * IMPORTANT FOR SETTING THE STEPSIZE OF NDF15
+ * IMPORTANT FOR SETTING THE STEPSIZE OF NDF15 1.0e-5
  */
 class_precision_parameter(tol_perturbations_integration,double,1.0e-5)
 /**

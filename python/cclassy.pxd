@@ -114,8 +114,6 @@ cdef extern from "class.h":
         double sigex
         double rs_mod
         double rd_mod
-        double Omega_qs
-        double w_qs
         double Omega0_new
         double w_new
         double wb_fld
