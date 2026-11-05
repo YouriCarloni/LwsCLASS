@@ -2695,7 +2695,22 @@ int input_read_parameters_species(struct file_content * pfc,
 
   class_read_double("Omega_new",pba->Omega0_new);
   class_read_double("w_new",pba->w_new);
-  Omega_tot += pba->Omega0_new;
+   
+  class_test(!isfinite(pba->Omega0_new) ||
+           pba->Omega0_new < 0.,
+           errmsg,
+           "Omega_new must be finite and non-negative (got %g).",
+           pba->Omega0_new);
+
+  class_test(!isfinite(pba->w_new),
+           errmsg,
+           "w_new must be finite (got %g).",
+           pba->w_new);
+
+  class_test((pba->Omega0_new > 0.) &&
+           (fabs(1.+pba->w_new) < 1.e-12),
+           errmsg,
+           "w_new = -1 is not supported by the added-fluid perturbation equations (division by 1+w_new). Use Omega_Lambda instead.");
   
   class_read_double("wb_fld",pba->wb_fld);
   /*pba->wb_fld = pow(10.0, pba->wb_fld);*/
@@ -2703,7 +2718,6 @@ int input_read_parameters_species(struct file_content * pfc,
  /* class_read_double("Omega_new",pba->Omega0_new);
   pba->Omega0_new = pow(10.0, pba->Omega0_new);
   class_read_double("w_new",pba->w_new);
-  Omega_tot += pba->Omega0_new;
 */
 
   /* 7) ** ADDITIONAL SPECIES ** --> Add your species here */
@@ -3208,6 +3222,7 @@ int input_read_parameters_species(struct file_content * pfc,
   Omega_tot += pba->Omega0_dcdmdr;
   Omega_tot += pba->Omega0_idr;
   Omega_tot += pba->Omega0_ncdm_tot;
+  Omega_tot += pba->Omega0_new;
   
   /* Step 1 */
   if (flag1 == _TRUE_){
