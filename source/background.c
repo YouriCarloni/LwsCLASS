@@ -2515,6 +2515,33 @@ pvecback_integration[pba->index_bi_rho_fld] = rho_fld_today * exp(integral_fld);
   class_call(background_functions(pba, a, pvecback_integration, normal_info, pvecback),
              pba->error_message,
              pba->error_message);
+  
+   /* Check the radiation-dominated initial conditions. For w_new > 1/3, the additional fluid grows
+   faster than radiation towards the past.*/
+
+  if ((pba->has_new == _TRUE_) &&
+      (pba->w_new >= 1./3.)) {
+  
+      class_test(
+          fabs(pvecback[pba->index_bg_Omega_r]-1.)
+              > ppr->tol_initial_Omega_r,
+  
+          pba->error_message,
+  
+          "LwsCLASS: radiation-dominated initial conditions invalid: "
+          "w_new=%g, Omega_new=%g, a_ini=%g, Omega_r(a_ini)=%g, "
+          "rho_new/rho_r(a_ini)=%g. For w_new>1/3 the new fluid "
+          "dominates toward the past; decreasing a_ini does NOT "
+          "solve this. Derive and implement appropriate initial "
+          "conditions rather than forcing Omega_r=1.",
+  
+          pba->w_new,
+          pba->Omega0_new,
+          a,
+          pvecback[pba->index_bg_Omega_r],
+          pvecback[pba->index_bg_rho_new]/rho_rad
+      );
+  }
 
   /* Just checking that our initial time indeed is deep enough in the radiation
      dominated regime */
@@ -3068,7 +3095,8 @@ int background_output_budget(
       budget_radiation+=pba->Omega0_idr;
     }
 
-    if ((pba->has_fld == _TRUE_)|| (pba->has_lambda == _TRUE_)  || (pba->has_scf == _TRUE_) || (pba->has_curvature == _TRUE_)) {
+    if ((pba->has_fld == _TRUE_)|| (pba->has_lambda == _TRUE_)  || (pba->has_scf == _TRUE_) || (pba->has_curvature == _TRUE_)||
+    (pba->has_new == _TRUE_)) {
       printf(" ---> Other Content \n");
     }
       
@@ -3087,6 +3115,18 @@ int background_output_budget(
     if (pba->has_curvature == _TRUE_) {
       class_print_species("Spatial Curvature",k);
       budget_other+=pba->Omega0_k;
+    }
+    
+    /* Display the additional fluid */
+
+    if (pba->has_new == _TRUE_) {
+    
+        printf("-> %-30s Omega = %-15g , omega = %-15g \n",
+               "Additional fluid (Omega_new)",
+               pba->Omega0_new,
+               pba->Omega0_new*pba->h*pba->h);
+    
+        budget_other += pba->Omega0_new;
     }
 
     printf(" ---> Total budgets \n");
