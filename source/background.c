@@ -2520,7 +2520,7 @@ pvecback_integration[pba->index_bi_rho_fld] = rho_fld_today * exp(integral_fld);
    faster than radiation towards the past.*/
 
   if ((pba->has_new == _TRUE_) &&
-      (pba->w_new >= 1./3.)) {
+      (pba->w_new > 1./3.)) {
   
       class_test(
           fabs(pvecback[pba->index_bg_Omega_r]-1.)
@@ -3112,7 +3112,7 @@ int background_output_budget(
       class_print_species("Scalar Field",scf);
       budget_other+=pba->Omega0_scf;
     }
-    if  {
+    if (pba->has_curvature == _TRUE_){
       class_print_species("Spatial Curvature",k);
       budget_other+=pba->Omega0_k;
     }
